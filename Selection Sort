@@ -1,0 +1,78 @@
+namespace Тест
+{
+    internal class Program
+    {
+        static void SelectionSort(int[] array)
+        {
+            int n = array.Length;
+
+            for (int i = 0; i < n - 1; i++)
+            {
+                int minIndex = i;
+                for (int j = i + 1; j < n; j++)
+                {
+                    if (array[j] < array[minIndex])
+                    {
+                        minIndex = j;
+                    }
+                }
+
+                if (minIndex != i)
+                {
+                    int temp = array[i];
+                    array[i] = array[minIndex];
+                    array[minIndex] = temp;
+                }
+            }
+        }
+
+        static void GenerateAndMeasureSorting()
+        {
+
+            int[] sizes = { 100, 1000, 10000 };
+
+            foreach (int size in sizes)
+            {
+                Console.WriteLine($" Массив из {size} элементов");
+
+               
+                int[] array = GenerateRandomArray(size);
+                MeasureSortingTime(array);
+            }
+        }
+
+        static int[] GenerateRandomArray(int size)
+        {
+            Random random = new Random();
+            int[] array = new int[size];
+
+            for (int i = 0; i < size; i++)
+            {
+                array[i] = random.Next(1, 1000);
+            }
+
+            return array;
+        }
+
+        static void MeasureSortingTime(int[] array)
+        {
+            int[] arrayToSort = new int[array.Length];
+            Array.Copy(array, arrayToSort, array.Length);
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            SelectionSort(arrayToSort);
+            stopwatch.Stop();
+
+
+            Console.WriteLine($"Время сортировки: {stopwatch.ElapsedMilliseconds} мс");
+        }
+
+
+        static void Main()
+        {
+            
+            GenerateAndMeasureSorting();
+        }
+    }
+}
