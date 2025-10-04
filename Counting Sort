@@ -1,0 +1,80 @@
+namespace Тест
+{
+    internal class Program
+    {
+        static void CountingSort(int[] array, int k)
+        {
+            if (array.Length <= 1)
+                return;
+
+            int[] count = new int[k + 1];
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] < 0 || array[i] > k)
+                    throw new ArgumentException($"Элемент {array[i]} выходит за пределы диапазона [0, {k}]");
+
+                count[array[i]]++;
+            }
+
+            int index = 0;
+            for (int i = 0; i <= k; i++)
+            {
+                while (count[i] > 0)
+                {
+                    array[index] = i;
+                    index++;
+                    count[i]--;
+                }
+            }
+        }
+        static void GenerateAndMeasureSorting()
+        {
+
+            int[] sizes = { 100, 1000, 10000 };
+
+            foreach (int size in sizes)
+            {
+                Console.WriteLine($" Массив из {size} элементов");
+
+               
+                int[] array = GenerateRandomArray(size);
+                MeasureSortingTime(array);
+            }
+        }
+
+        static int[] GenerateRandomArray(int size)
+        {
+            Random random = new Random();
+            int[] array = new int[size];
+
+            for (int i = 0; i < size; i++)
+            {
+                array[i] = random.Next(1, 1000);
+            }
+
+            return array;
+        }
+
+        static void MeasureSortingTime(int[] array)
+        {
+            int[] arrayToSort = new int[array.Length];
+            Array.Copy(array, arrayToSort, array.Length);
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            int k = 10001;
+
+            CountingSort(arrayToSort,k);
+            stopwatch.Stop();
+
+
+            Console.WriteLine($"Время сортировки: {stopwatch.ElapsedMilliseconds} мс");
+        }
+
+
+        static void Main()
+        {
+            GenerateAndMeasureSorting();
+        }
+    }
+}
