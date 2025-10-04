@@ -1,0 +1,106 @@
+namespace Тест
+{
+    internal class Program
+    {
+        static void MergeSort(int[] array)
+        {
+            if (array.Length <= 1)
+                return;
+
+            int[] temp = new int[array.Length];
+            MergeSort(array, temp, 0, array.Length - 1);
+        }
+        static void MergeSort(int[] array, int[] temp, int left, int right)
+        {
+            if (left < right)
+            {
+                int mid = (left + right) / 2;
+
+                MergeSort(array, temp, left, mid);
+                MergeSort(array, temp, mid + 1, right);
+
+                Merge(array, temp, left, mid, right);
+            }
+        }
+        static void Merge(int[] array, int[] temp, int left, int mid, int right)
+        {
+
+            for (int i = left; i <= right; i++)
+            {
+                temp[i] = array[i];
+            }
+
+            int leftIndex = left;
+            int rightIndex = mid + 1;
+            int current = left;
+            while (leftIndex <= mid && rightIndex <= right)
+            {
+                if (temp[leftIndex] <= temp[rightIndex])
+                {
+                    array[current] = temp[leftIndex];
+                    leftIndex++;
+                }
+                else
+                {
+                    array[current] = temp[rightIndex];
+                    rightIndex++;
+                }
+                current++;
+            }
+            while (leftIndex <= mid)
+            {
+                array[current] = temp[leftIndex];
+                leftIndex++;
+                current++;
+            }
+        }
+        static void GenerateAndMeasureSorting()
+        {
+
+            int[] sizes = { 100, 1000, 10000 };
+
+            foreach (int size in sizes)
+            {
+                Console.WriteLine($" Массив из {size} элементов");
+
+               
+                int[] array = GenerateRandomArray(size);
+                MeasureSortingTime(array);
+            }
+        }
+
+        static int[] GenerateRandomArray(int size)
+        {
+            Random random = new Random();
+            int[] array = new int[size];
+
+            for (int i = 0; i < size; i++)
+            {
+                array[i] = random.Next(1, 1000);
+            }
+
+            return array;
+        }
+
+        static void MeasureSortingTime(int[] array)
+        {
+            int[] arrayToSort = new int[array.Length];
+            Array.Copy(array, arrayToSort, array.Length);
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            MergeSort(arrayToSort);
+            stopwatch.Stop();
+
+
+            Console.WriteLine($"Время сортировки: {stopwatch.ElapsedMilliseconds} мс");
+        }
+
+
+        static void Main()
+        {
+            
+            GenerateAndMeasureSorting();
+        }
+    }
+}
