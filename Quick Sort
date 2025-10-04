@@ -1,0 +1,97 @@
+namespace Тест
+{
+    internal class Program
+    {
+        static void QuickSort(int[] array)
+        {
+            if (array.Length <= 1)
+                return;
+
+            QuickSort(array, 0, array.Length - 1);
+        }
+
+        static void QuickSort(int[] array, int left, int right)
+        {
+            if (left < right)
+            {
+                int pivotIndex = Partition(array, left, right);
+
+                QuickSort(array, left, pivotIndex - 1);
+                QuickSort(array, pivotIndex + 1, right);
+            }
+        }
+
+        static int Partition(int[] array, int left, int right)
+        {
+            int pivot = array[right];
+            int i = left - 1;
+
+            for (int j = left; j < right; j++)
+            {
+                if (array[j] <= pivot)
+                {
+                    i++;
+                    Swap(array, i, j);
+                }
+            }
+
+            Swap(array, i + 1, right);
+            return i + 1;
+        }
+
+        static void Swap(int[] array, int i, int j)
+        {
+            int temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        static void GenerateAndMeasureSorting()
+        {
+
+            int[] sizes = { 100, 1000, 10000 };
+
+            foreach (int size in sizes)
+            {
+                Console.WriteLine($" Массив из {size} элементов");
+
+               
+                int[] array = GenerateRandomArray(size);
+                MeasureSortingTime(array);
+            }
+        }
+
+        static int[] GenerateRandomArray(int size)
+        {
+            Random random = new Random();
+            int[] array = new int[size];
+
+            for (int i = 0; i < size; i++)
+            {
+                array[i] = random.Next(1, 1000);
+            }
+
+            return array;
+        }
+
+        static void MeasureSortingTime(int[] array)
+        {
+            int[] arrayToSort = new int[array.Length];
+            Array.Copy(array, arrayToSort, array.Length);
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            QuickSort(arrayToSort);
+            stopwatch.Stop();
+
+
+            Console.WriteLine($"Время сортировки: {stopwatch.ElapsedMilliseconds} мс");
+        }
+
+
+        static void Main()
+        {
+            
+            GenerateAndMeasureSorting();
+        }
+    }
+}
