@@ -1,0 +1,71 @@
+namespace Тест
+{
+    internal class Program
+    {
+        static void InsertionSort(int[] array)
+        {
+            int n = array.Length;
+
+            for (int i = 1; i < n; i++)
+            {
+                int current = array[i];
+                int j = i - 1;
+
+                while (j >= 0 && array[j] > current)
+                {
+                    array[j + 1] = array[j];
+                    j--;
+                }
+                array[j + 1] = current;
+            }
+        }
+        static void GenerateAndMeasureSorting()
+        {
+
+            int[] sizes = { 100, 1000, 10000 };
+
+            foreach (int size in sizes)
+            {
+                Console.WriteLine($" Массив из {size} элементов");
+
+               
+                int[] array = GenerateRandomArray(size);
+                MeasureSortingTime(array);
+            }
+        }
+
+        static int[] GenerateRandomArray(int size)
+        {
+            Random random = new Random();
+            int[] array = new int[size];
+
+            for (int i = 0; i < size; i++)
+            {
+                array[i] = random.Next(1, 1000);
+            }
+
+            return array;
+        }
+
+        static void MeasureSortingTime(int[] array)
+        {
+            int[] arrayToSort = new int[array.Length];
+            Array.Copy(array, arrayToSort, array.Length);
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            InsertionSort(arrayToSort);
+            stopwatch.Stop();
+
+
+            Console.WriteLine($"Время сортировки: {stopwatch.ElapsedMilliseconds} мс");
+        }
+
+
+        static void Main()
+        {
+            
+            GenerateAndMeasureSorting();
+        }
+    }
+}
